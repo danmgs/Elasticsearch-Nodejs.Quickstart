@@ -1,0 +1,15 @@
+{
+    "extends": "airbnb-base",
+    "rules": {
+        "linebreak-style": 0,
+        "comma-dangle": "off",
+        "no-console": "off",
+        "indent": 0,
+        "no-unused-vars": ["error"],
+        "no-underscore-dangle": ["error", { "allow": ["_id", "_version"] }]
+    },
+    "env": {
+        "node": true,
+        "mocha": true
+    }
+}
