@@ -3,7 +3,7 @@ const {
     squarefunc, multiplyfunc, sumfunc, minusfunc
 } = require('../func_utils');
 
-xdescribe('Testing func_utils', () => {
+xdescribe('TESTING FUNC_UTILS MODULE', () => {
     it('should return a * a', (done) => {
         const res = squarefunc(2);
         assert(res === 4);

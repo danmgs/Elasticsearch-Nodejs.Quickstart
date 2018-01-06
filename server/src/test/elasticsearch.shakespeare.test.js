@@ -1,7 +1,7 @@
 const assert = require('assert');
 const esclient = require('../elastic_config');
 
-describe('Testing Elasticsearch Setup', () => {
+xdescribe('TESTING ELASTICSEARCH SETUP : shakespeare Index', () => {
     xit('Ping cluster', (done) => {
         esclient.ping({
             requestTimeout: 30000,
@@ -31,7 +31,7 @@ describe('Testing Elasticsearch Setup', () => {
         );
     });
 
-    xit('List the indices', () => {
+    xit('List the indices to find shakespeare', () => {
         return esclient.cat.indices({})
             .then((res) => {
                 // console.log('test', res);

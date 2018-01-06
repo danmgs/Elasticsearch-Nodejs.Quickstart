@@ -1,7 +1,7 @@
 const assert = require('assert');
 const esclient = require('../elastic_config');
 
-describe('PARENT - Testing Elasticsearch Setup', () => {
+xdescribe('PARENT - TESTING ELASTICSEARCH SETUP', () => {
     const strIndexName = 'my_custom_indice';
 
     it(`Create new index ${strIndexName} with mapping for my_custom_type`, (done) => {
@@ -31,7 +31,7 @@ describe('PARENT - Testing Elasticsearch Setup', () => {
         });
     });
 
-    describe('NESTED CHILDREN - Testing Elasticsearch', () => {
+    describe('NESTED CHILDREN - TESTING ELASTICSEARCH SETUP', () => {
         it(`Delete existing indice ${strIndexName}`, () => {
             return esclient.indices.delete({
                 index: strIndexName,
