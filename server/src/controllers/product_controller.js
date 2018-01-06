@@ -5,19 +5,25 @@ const bodybuilder = require('bodybuilder');
 const index = 'product';
 const type = 'default';
 
-const EnumSoldStatus = {
-    BESTSELLER: 0,
-    LOW: 1,
-};
-
 const soldBarrierStatusRange = {
     min: 10,
-    max: 100
+    max: 300, // process.env.SOLD_BARRIER_MAX
 };
 
 module.exports = {
     get(req, res, next) {
         baseCtrl.get(req, res, next, index, type);
+    },
+
+    /**
+     * Get the configuration.
+     */
+    getConfig(req, res) {
+        const data = {
+            soldBarrierStatusRange
+        };
+
+        res.send(data);
     },
 
     /**
@@ -49,38 +55,58 @@ module.exports = {
      * @returns {Hits[]}
      */
     search(req, res, next) {
-        const itemProps = req.body;
-        console.log(JSON.stringify(itemProps, undefined, 2));
+        const { query } = req.body;
+        console.log(JSON.stringify(query, undefined, 2));
         let body = bodybuilder();
 
-        if (itemProps.text) {
-            body = body.query('match', 'name', itemProps.name);
-            body = body.orQuery('match', 'description', itemProps.name);
-            body = body.orQuery('match', 'tags', itemProps.name);
-        }
-
-        if (itemProps.maxPrice || itemProps.minPrice) {
-            if (itemProps.maxPrice && itemProps.minPrice) {
-                body = body.query('range', 'price', { gte: itemProps.minPrice, lte: itemProps.maxPrice });
-            } else if (itemProps.maxPrice) {
-                body = body.query('range', 'price', { lte: itemProps.minPrice });
+        if (query.searchText) {
+            if (!query.options.isFuzzy) {
+                body = body.query('match', 'name', query.searchText);
+                body = body.orQuery('match', 'description', query.searchText);
+                body = body.orQuery('match', 'tags', query.searchText);
             } else {
-                body = body.query('range', 'price', { gte: itemProps.maxPrice });
+                body = body.query('match', 'name', { query: query.searchText, fuzziness: 'auto' });
+                body = body.orQuery('match', 'description', query.searchText);
+                body = body.orQuery('match', 'tags', query.searchText);
             }
         }
 
-        if (itemProps.inStockStatus) {
+        /*
+        "highlight": {
+            "pre_tags": ["<strong>"],
+            "post_tags": ["</strong>"],
+            "fields": {
+              "name": {}
+            }*/
+
+        // body = body.rawOption('highlight', { fields: { name: {} } });
+
+        body = body.rawOption('highlight', { pre_tags: ['<strong>'], post_tags: ['</strong>'], fields: { name: {} } });
+
+        if (query.rangePrices) {
+            const minPrice = query.rangePrices[0];
+            const maxPrice = query.rangePrices[1];
+            if (maxPrice || minPrice) {
+                if (maxPrice && minPrice) {
+                    body = body.query('range', 'price', { gte: minPrice, lte: maxPrice });
+                } else if (maxPrice) {
+                    body = body.query('range', 'price', { lte: maxPrice });
+                } else {
+                    body = body.query('range', 'price', { gte: minPrice });
+                }
+            }
+        }
+
+        if (query.isActive) {
+            body = body.andQuery('match', 'is_active', query.isActive);
+        }
+
+        if (query.isInStock) {
             body = body.andQuery('range', 'in_stock', { gte: 0 });
         }
 
-        if (itemProps.soldStatus) {
-            if (itemProps.soldStatus === EnumSoldStatus.BESTSELLER) {
-                body = body.andQuery('range', 'sold', { gte: soldBarrierStatusRange.max });
-            } else if (itemProps.soldStatus === EnumSoldStatus.LOW) {
-                body = body.andQuery('range', 'sold', { lte: soldBarrierStatusRange.min });
-            } else {
-                body = body.andQuery('range', 'sold', { gt: soldBarrierStatusRange.min, lt: soldBarrierStatusRange.max });
-            }
+        if (query.isBestSeller) {
+            body = body.andQuery('range', 'sold', { gte: soldBarrierStatusRange.max });
         }
 
         body = body.build();

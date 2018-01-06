@@ -1,0 +1,86 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1 class="header-title-page">
+    SEARCH A PRODUCT
+  </h1>
+</div>
+<div class="container">
+  <div class="row lg-margin">
+    <div class="col-sm">
+      <form>
+        <div class="form-group">
+          <input type="text" class="form-control" id="inputSearchText" name="searchText" [(ngModel)]="q.searchText" placeholder="What are you looking for ?">
+        </div>
+        <div class="form-group slider md-margin">
+          <label class="form-check-label" for="rangesPrices">{{ q.rangePrices[0] }}€ < Price < {{ q.rangePrices[1] }}€</label>
+          <nouislider id="rangesPrices" name="rangePrices" [config]="sliderRangeconfig" [(ngModel)]="q.rangePrices"></nouislider>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="isInStock" name="isInStock" [(ngModel)]="q.isInStock">
+          <label class="form-check-label" for="isInStock">Show in Stock Only</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="isBestSeller" name="isBestSeller" [(ngModel)]="q.isBestSeller">
+          <label class="form-check-label" for="isBestSeller">Show Best Seller Only</label>
+          <small id="isBestSellerHelp" class="form-text text-muted" *ngIf="productServiceConfigResponse">* products sold greater than {{ productServiceConfigResponse.soldBarrierStatusRange.max }} times ! </small>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="isActive" name="isActive" [(ngModel)]="q.isActive">
+          <label class="form-check-label" for="isActive">Show active Only</label>
+        </div>
+        <!-- <div class="form-check md-margin">
+          <input type="checkbox" class="form-check-input" id="isHighlight" name="isHighlight" [(ngModel)]="q.options.isHighlight">
+          <label class="form-check-label options-cmd" for="isHighlight">highlights search results</label>
+        </div>         -->
+        <div class="form-check md-margin">
+          <input type="checkbox" class="form-check-input" id="isFuzzy" name="isFuzzy" [(ngModel)]="q.options.isFuzzy">
+          <label class="form-check-label options-cmd" for="isFuzzy">Performs fuzzy search</label>
+          <small id="isFuzzySearchHelp" class="form-text text-muted">* activates approximate string matching</small>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-info" (click)="search()">
+            <span class="glyphicon glyphicon-search"></span> Search
+          </button>
+          <hr>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- <div class="row">
+    <pre>{{ productResponse | json }}</pre>
+  </div> -->
+  <div class="row" *ngIf="productResponse.length > 0">
+    <div class="col-sm">
+      <table class="table table-sm table-inverse table-bordered results">
+        <thead>
+          <tr class="table-header">
+            <th>#</th>
+            <th>NAME</th>
+            <th>DESCRIPTION</th>
+            <th>PRICE</th>
+            <th>SOLD</th>
+            <th>IN STOCK</th>
+            <th>ACTIVE</th>
+            <th>BEST SELLER </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let elt of productResponse, let ind = index;" [ngClass]="(ind%2==0)?'':'bg-info-custom'">
+            <th scope="row">{{ ind + 1 }}</th>
+            <td class="highlight-key-content" [innerHTML]="elt.highlight"></td>
+            <td>{{ elt.description }}</td>
+            <td>{{ elt.price }}€</td>
+            <td>{{ elt.sold }}</td>
+            <td>{{ elt.inStock }}</td>
+            <td>{{ elt.active }}</td>
+            <td class="text-center">
+              <div *ngIf="elt.sold > productServiceConfigResponse.soldBarrierStatusRange.max">
+                <i class="fa fa-thermometer-full fa-2x" aria-hidden="true"></i>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

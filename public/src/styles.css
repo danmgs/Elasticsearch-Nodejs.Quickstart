@@ -1,0 +1,60 @@
+/* You can add global styles to this file, and also import other style files */
+
+.row
+{
+    margin-top:15px;
+}
+
+div.lg-margin
+{
+    margin-top:30px;
+    margin-bottom:30px;
+}
+
+div.md-margin
+{
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+div.sm-margin
+{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+table.results td.highlight-key-content strong
+{
+    color: red;
+}
+
+form div.slider
+{
+    margin-bottom:70px;
+}
+
+form label.options-cmd
+{
+    color: red;
+}
+
+.header-title-page
+{
+    margin-bottom:15px;
+    text-transform: uppercase;
+    cursor: default;
+}
+
+tr.table-header > th {
+    text-transform: uppercase;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+    background-color: #245fac;
+}
+
+.bg-info-custom {
+    background-color: #60a5ff;
+}
+
+
