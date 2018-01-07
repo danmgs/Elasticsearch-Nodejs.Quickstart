@@ -1,6 +1,8 @@
 export class ProductServiceConfig {
     constructor(
-        public soldBarrierStatusRange: any
+        public soldBarrierStatusRangeConfig: any,
+        public maxEditDistanceConfig: Number,
+        public maxFuzzyConfig: String
       ) { }
   }
   

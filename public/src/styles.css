@@ -5,6 +5,22 @@
     margin-top:15px;
 }
 
+small strong 
+{
+    color: red;
+}
+
+p.advanced-search
+{
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+div.advanced-search
+{
+    margin-bottom:20px;
+}
+
 div.lg-margin
 {
     margin-top:30px;

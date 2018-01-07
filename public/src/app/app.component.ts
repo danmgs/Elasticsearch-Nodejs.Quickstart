@@ -5,6 +5,8 @@ import { Product } from './Shared/Product';
 import { ProductSearchQuery } from './Shared/ProductSearchQuery';
 import { ProductServiceConfig } from './Shared/ProductServiceConfig';
 
+import { EnumSearchOptions } from './Shared/EnumSearchOptions';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -22,10 +24,14 @@ export class AppComponent implements OnInit {
   constructor(private productService: ProductService) { }
 
   ngOnInit() {
-    this.q = new ProductSearchQuery(true, true, false);
+    this.q = new ProductSearchQuery(true, false, false);
     this.q.searchText = 'lobster';
-    this.q.rangePrices = [3, 500];
-    this.q.options.isFuzzy = false;
+    this.q.rangePrices = [0, 500];
+    // this.q.options.isFuzzySearch = false;
+    // this.q.options.isExactMatchSearch = false;
+    // this.q.options.isProximitySearch = false;
+
+    this.q.options = EnumSearchOptions.isSearchNone;
     
     this.sliderRangeconfig = {
       behaviour: 'drag',

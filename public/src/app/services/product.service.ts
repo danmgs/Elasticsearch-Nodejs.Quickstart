@@ -22,7 +22,9 @@ export class ProductService {
         const res = response.json();
         console.log('res = ', res);
         return new ProductServiceConfig(
-          res.soldBarrierStatusRange
+          res.soldBarrierStatusRangeConfig,
+          res.maxEditDistanceConfig,
+          res.maxFuzzyConfig
         );
       });
   }
@@ -37,10 +39,10 @@ export class ProductService {
 
         return response.json().map(item => {
           let itemSrc = item._source;
-          let itemHighlight = item.highlight;
+          let itemHighlightName = item.highlight ? item.highlight.name : null;
 
           console.log('itemSrc', itemSrc);
-          console.log('itemHighlight', itemHighlight);
+          console.log('itemHighlightName', itemHighlightName);
 
           return new Product(
             itemSrc.name,
@@ -49,7 +51,7 @@ export class ProductService {
             itemSrc.in_stock,
             itemSrc.sold,
             itemSrc.is_active,
-            itemHighlight.name 
+            itemHighlightName
           );
         }
         );

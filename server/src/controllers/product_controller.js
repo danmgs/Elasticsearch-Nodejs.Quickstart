@@ -5,9 +5,19 @@ const bodybuilder = require('bodybuilder');
 const index = 'product';
 const type = 'default';
 
-const soldBarrierStatusRange = {
+const soldBarrierStatusRangeConfig = {
     min: 10,
     max: 300, // process.env.SOLD_BARRIER_MAX
+};
+
+const maxEditDistanceConfig = 4;
+const maxFuzzyConfig = 'auto';
+
+const enumSearchOptions = {
+    isSearchNone: 'isSearchNone',
+    isSearchFuzzy: 'isSearchFuzzy',
+    isSearchExactMatch: 'isSearchExactMatch',
+    isSearchProximity: 'isSearchProximity',
 };
 
 module.exports = {
@@ -20,7 +30,9 @@ module.exports = {
      */
     getConfig(req, res) {
         const data = {
-            soldBarrierStatusRange
+            soldBarrierStatusRangeConfig,
+            maxEditDistanceConfig,
+            maxFuzzyConfig
         };
 
         res.send(data);
@@ -59,27 +71,48 @@ module.exports = {
         console.log(JSON.stringify(query, undefined, 2));
         let body = bodybuilder();
 
+        // if (query.searchText) {
+        //     if (!query.options.isFuzzy) {
+        //         body = body.query('match', 'name', query.searchText);
+        //         body = body.orQuery('match', 'description', query.searchText);
+        //         body = body.orQuery('match', 'tags', query.searchText);
+        //     } else {
+        //         body = body.query('match', 'name', { query: query.searchText, fuzziness: 'auto' });
+        //         body = body.orQuery('match', 'description', { query: query.searchText, fuzziness: 'auto' });
+        //         body = body.orQuery('match', 'tags', { query: query.searchText, fuzziness: 'auto' });
+        //     }
+        // }
+
+        console.log('search options = ', query.options);
+
+        let searchTextObj;
         if (query.searchText) {
-            if (!query.options.isFuzzy) {
-                body = body.query('match', 'name', query.searchText);
-                body = body.orQuery('match', 'description', query.searchText);
-                body = body.orQuery('match', 'tags', query.searchText);
+            if (query.options === enumSearchOptions.isSearchExactMatch) {
+                console.log('1');
+                searchTextObj = query.searchText;
+                body = body.query('match_phrase', 'name', searchTextObj);
+                body = body.orQuery('match_phrase', 'description', searchTextObj);
+                body = body.orQuery('match_phrase', 'tags', searchTextObj);
+            } else if (query.options === enumSearchOptions.isSearchProximity) {
+                console.log('2');
+                searchTextObj = { query: query.searchText, slop: maxEditDistanceConfig };
+                body = body.query('match_phrase', 'name', searchTextObj);
+                body = body.orQuery('match_phrase', 'description', searchTextObj);
+                body = body.orQuery('match_phrase', 'tags', searchTextObj);
             } else {
-                body = body.query('match', 'name', { query: query.searchText, fuzziness: 'auto' });
-                body = body.orQuery('match', 'description', query.searchText);
-                body = body.orQuery('match', 'tags', query.searchText);
+                if (query.options === enumSearchOptions.isSearchFuzzy) {
+                    console.log('3');
+                    searchTextObj = { query: query.searchText, fuzziness: maxFuzzyConfig };
+                } else {
+                    console.log('4');
+                    searchTextObj = query.searchText;
+                }
+
+                body = body.query('match', 'name', searchTextObj);
+                body = body.orQuery('match', 'description', searchTextObj);
+                body = body.orQuery('match', 'tags', searchTextObj);
             }
         }
-
-        /*
-        "highlight": {
-            "pre_tags": ["<strong>"],
-            "post_tags": ["</strong>"],
-            "fields": {
-              "name": {}
-            }*/
-
-        // body = body.rawOption('highlight', { fields: { name: {} } });
 
         body = body.rawOption('highlight', { pre_tags: ['<strong>'], post_tags: ['</strong>'], fields: { name: {} } });
 
@@ -106,12 +139,12 @@ module.exports = {
         }
 
         if (query.isBestSeller) {
-            body = body.andQuery('range', 'sold', { gte: soldBarrierStatusRange.max });
+            body = body.andQuery('range', 'sold', { gte: soldBarrierStatusRangeConfig.max });
         }
 
         body = body.build();
 
-        // console.log('body', JSON.stringify(body, undefined, 2));
+        console.log('body', JSON.stringify(body, undefined, 2));
 
         esclient.search({
             index,

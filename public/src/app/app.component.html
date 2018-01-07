@@ -1,7 +1,8 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1 class="header-title-page">
-    SEARCH A PRODUCT
+    PRODUCTS STORE
+    <i class="fa fa-search" aria-hidden="true"></i>
   </h1>
 </div>
 <div class="container">
@@ -9,11 +10,13 @@
     <div class="col-sm">
       <form>
         <div class="form-group">
+          <label for="inputSearchText">Search for :</label>
           <input type="text" class="form-control" id="inputSearchText" name="searchText" [(ngModel)]="q.searchText" placeholder="What are you looking for ?">
         </div>
         <div class="form-group slider md-margin">
-          <label class="form-check-label" for="rangesPrices">{{ q.rangePrices[0] }}€ < Price < {{ q.rangePrices[1] }}€</label>
-          <nouislider id="rangesPrices" name="rangePrices" [config]="sliderRangeconfig" [(ngModel)]="q.rangePrices"></nouislider>
+          <label class="form-check-label" for="rangesPrices">Filter: {{ q.rangePrices[0] }}€
+            < Price < {{ q.rangePrices[1] }}€</label>
+              <nouislider id="rangesPrices" name="rangePrices" [config]="sliderRangeconfig" [(ngModel)]="q.rangePrices"></nouislider>
         </div>
         <div class="form-check">
           <input type="checkbox" class="form-check-input" id="isInStock" name="isInStock" [(ngModel)]="q.isInStock">
@@ -22,20 +25,66 @@
         <div class="form-check">
           <input type="checkbox" class="form-check-input" id="isBestSeller" name="isBestSeller" [(ngModel)]="q.isBestSeller">
           <label class="form-check-label" for="isBestSeller">Show Best Seller Only</label>
-          <small id="isBestSellerHelp" class="form-text text-muted" *ngIf="productServiceConfigResponse">* products sold greater than {{ productServiceConfigResponse.soldBarrierStatusRange.max }} times ! </small>
+          <small id="isBestSellerHelp" class="form-text text-muted" *ngIf="productServiceConfigResponse">* products sold greater than <strong>{{ productServiceConfigResponse.soldBarrierStatusRangeConfig.max }}</strong> times ! </small>
         </div>
         <div class="form-check">
           <input type="checkbox" class="form-check-input" id="isActive" name="isActive" [(ngModel)]="q.isActive">
           <label class="form-check-label" for="isActive">Show active Only</label>
         </div>
-        <!-- <div class="form-check md-margin">
-          <input type="checkbox" class="form-check-input" id="isHighlight" name="isHighlight" [(ngModel)]="q.options.isHighlight">
-          <label class="form-check-label options-cmd" for="isHighlight">highlights search results</label>
-        </div>         -->
+
+        <!--
         <div class="form-check md-margin">
-          <input type="checkbox" class="form-check-input" id="isFuzzy" name="isFuzzy" [(ngModel)]="q.options.isFuzzy">
-          <label class="form-check-label options-cmd" for="isFuzzy">Performs fuzzy search</label>
+          <input type="checkbox" class="form-check-input" id="isFuzzySearch" name="isFuzzySearch" [(ngModel)]="q.options.isFuzzySearch">
+          <label class="form-check-label options-cmd" for="isFuzzySearch">Performs fuzzy search</label>
           <small id="isFuzzySearchHelp" class="form-text text-muted">* activates approximate string matching</small>
+        </div>
+        <div class="form-check md-margin">
+          <input type="checkbox" class="form-check-input" id="isExactMatchSearch" name="isExactMatchSearch" [(ngModel)]="q.options.isExactMatchSearch">
+          <label class="form-check-label options-cmd" for="isExactMatchSearch">Performs exact match search</label>
+          <small id="isExactMatchSearchHelp" class="form-text text-muted">* activates exact matching</small>
+        </div>
+        <div class="form-check md-margin">
+          <input type="checkbox" class="form-check-input" id="isProximitySearch" name="isProximitySearch" [(ngModel)]="q.options.isProximitySearch">
+          <label class="form-check-label options-cmd" for="isProximitySearch">Performs proximity search</label>
+          <small id="isProximitySearchHelp" class="form-text text-muted">* activates proximity search</small>
+        </div> 
+      -->
+
+        <p class="advanced-search">
+          <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Show more filters&nbsp;
+            <i class="fa fa-search-plus" aria-hidden="true"></i>
+          </a>
+        </p>
+        <div class="collapse advanced-search" id="collapseExample">
+          <fieldset class="form-group">
+            <legend>Advanced Search
+              <i class="fa fa-wrench" aria-hidden="true"></i>
+            </legend>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="optionsRadiosSearch" id="isSearchNone" [(ngModel)]="q.options" value="isSearchNone"> None
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="optionsRadiosSearch" id="isSearchFuzzy" [(ngModel)]="q.options" value="isSearchFuzzy"> Performs fuzzy search
+              </label>
+              <small id="isSearchFuzzyHelp" class="form-text text-muted">* activates approximate string matching, with fuzzy tolerance = <strong>{{ productServiceConfigResponse.maxFuzzyConfig }}</strong></small>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="optionsRadiosSearch" id="isSearchExactMatch" [(ngModel)]="q.options" value="isSearchExactMatch"> Performs exact match search
+              </label>
+              <small id="isSearchExactMatchHelp" class="form-text text-muted">* activates exact matching, where search terms order matters</small>
+            </div>
+            <div class="form-check disabled">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="optionsRadiosSearch" id="isSearchProximity" [(ngModel)]="q.options" value="isSearchProximity"> Performs proximity search
+              </label>
+              <small id="isSearchProximityHelp" class="form-text text-muted">* activates proximity search, with max edit-distance tolerance = <strong>{{ productServiceConfigResponse.maxEditDistanceConfig }}</strong></small>
+            </div>
+          </fieldset>
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-info" (click)="search()">
@@ -67,14 +116,21 @@
         <tbody>
           <tr *ngFor="let elt of productResponse, let ind = index;" [ngClass]="(ind%2==0)?'':'bg-info-custom'">
             <th scope="row">{{ ind + 1 }}</th>
-            <td class="highlight-key-content" [innerHTML]="elt.highlight"></td>
+            <td class="highlight-key-content" [innerHTML]="elt.highlight ? elt.highlight : elt.name"></td>
             <td>{{ elt.description }}</td>
             <td>{{ elt.price }}€</td>
             <td>{{ elt.sold }}</td>
             <td>{{ elt.inStock }}</td>
-            <td>{{ elt.active }}</td>
             <td class="text-center">
-              <div *ngIf="elt.sold > productServiceConfigResponse.soldBarrierStatusRange.max">
+              <div *ngIf="elt.active; else inactive_content">
+                <i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i>
+              </div>
+              <ng-template #inactive_content>
+                <i class="fa fa-square-o fa-2x" aria-hidden="true"></i>
+              </ng-template>
+            </td>
+            <td class="text-center">
+              <div *ngIf="elt.sold > productServiceConfigResponse.soldBarrierStatusRangeConfig.max">
                 <i class="fa fa-thermometer-full fa-2x" aria-hidden="true"></i>
               </div>
             </td>
