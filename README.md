@@ -1,4 +1,4 @@
-# Elasticsearch.QuickStart (2018)
+# Elasticsearch.Nodejs.QuickStart (2018)
 
 A Simple Quickstart for Elasticsearch with nodejs, leveraging microservices exposed as web api.
 
@@ -8,7 +8,17 @@ A Simple Quickstart for Elasticsearch with nodejs, leveraging microservices expo
 1. Setup:
 Start elasticsearch cluster first.
 
-2. Activate the trace for elasticsearch client in **elastic_config.js** :
+
+2. data file in **server\datasamples** directory. 
+
+Command to bulk insert products from file **products-bulk.json** :
+```
+POST /product/default/_bulk
+[put here file content]
+```
+
+
+3. Activate the trace for elasticsearch client in **elastic_config.js** :
 
 ```
 const esclient = new elasticsearch.Client({
@@ -18,6 +28,6 @@ const esclient = new elasticsearch.Client({
 ```
 
 
-3. Links
+4. Links
 https://marcobonzanini.com/2015/02/09/phrase-match-and-proximity-search-in-elasticsearch/
 
