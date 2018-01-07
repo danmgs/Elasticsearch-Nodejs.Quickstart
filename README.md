@@ -3,6 +3,7 @@
 A Simple Quickstart for Elasticsearch with nodejs, leveraging microservices exposed as web api.
 
 ![alt capture1](https://github.com/danmgs/Elasticsearch-Nodejs.Quickstart/blob/master/public/img/screenshot1.JPG)
+![alt capture2](https://github.com/danmgs/Elasticsearch-Nodejs.Quickstart/blob/master/public/img/screenshot2.JPG)
 
 
 1. Setup:
