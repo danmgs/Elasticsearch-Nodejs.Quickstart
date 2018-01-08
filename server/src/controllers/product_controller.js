@@ -1,24 +1,10 @@
 const esclient = require('../elastic_config');
 const baseCtrl = require('./base_controller');
+const prdApiConfig = require('../shared/ProductApiConfig');
 const bodybuilder = require('bodybuilder');
 
 const index = 'product';
 const type = 'default';
-
-const soldBarrierStatusRangeConfig = {
-    min: 10,
-    max: 300, // process.env.SOLD_BARRIER_MAX
-};
-
-const maxEditDistanceConfig = 4;
-const maxFuzzyConfig = 'auto';
-
-const enumSearchOptions = {
-    isSearchNone: 'isSearchNone',
-    isSearchFuzzy: 'isSearchFuzzy',
-    isSearchExactMatch: 'isSearchExactMatch',
-    isSearchProximity: 'isSearchProximity',
-};
 
 module.exports = {
     get(req, res, next) {
@@ -29,13 +15,7 @@ module.exports = {
      * Get the configuration.
      */
     getConfig(req, res) {
-        const data = {
-            soldBarrierStatusRangeConfig,
-            maxEditDistanceConfig,
-            maxFuzzyConfig
-        };
-
-        res.send(data);
+        res.send(prdApiConfig);
     },
 
     /**
@@ -99,20 +79,30 @@ module.exports = {
 
         let searchTextObj;
         if (query.searchText) {
-            if (query.options === enumSearchOptions.isSearchExactMatch) {
+            if (query.options === prdApiConfig.enumSearchOptions.isSearchExactMatch) {
+                console.log(1);
                 searchTextObj = query.searchText;
                 body = body.query('match_phrase', 'name', searchTextObj);
                 body = body.orQuery('match_phrase', 'description', searchTextObj);
                 body = body.orQuery('match_phrase', 'tags', searchTextObj);
-            } else if (query.options === enumSearchOptions.isSearchProximity) {
-                searchTextObj = { query: query.searchText, slop: maxEditDistanceConfig };
+            } else if (query.options === prdApiConfig.enumSearchOptions.isSearchProximity) {
+                console.log(2);
+                searchTextObj = {
+                    query: query.searchText,
+                    slop: prdApiConfig.maxEditDistanceConfig
+                };
                 body = body.query('match_phrase', 'name', searchTextObj);
                 body = body.orQuery('match_phrase', 'description', searchTextObj);
                 body = body.orQuery('match_phrase', 'tags', searchTextObj);
             } else {
-                if (query.options === enumSearchOptions.isSearchFuzzy) {
-                    searchTextObj = { query: query.searchText, fuzziness: maxFuzzyConfig };
+                if (query.options === prdApiConfig.enumSearchOptions.isSearchFuzzy) {
+                    console.log(3);
+                    searchTextObj = {
+                        query: query.searchText,
+                        fuzziness: prdApiConfig.maxFuzzyConfig
+                    };
                 } else {
+                    console.log(4, query.options, prdApiConfig.enumSearchOptions.isSearchFuzzy);
                     searchTextObj = query.searchText;
                 }
 
@@ -147,7 +137,7 @@ module.exports = {
         }
 
         if (query.isBestSeller) {
-            body = body.andQuery('range', 'sold', { gte: soldBarrierStatusRangeConfig.max });
+            body = body.andQuery('range', 'sold', { gte: prdApiConfig.soldBarrierStatusRangeConfig.max });
         }
 
         body = body.build();

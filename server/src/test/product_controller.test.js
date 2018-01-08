@@ -1,6 +1,7 @@
 const { expect, assert } = require('chai');
 const request = require('supertest');
 const app = require('../app');
+const prdApiConfig = require('../shared/ProductApiConfig');
 
 describe('Product controller', () => {
     it('Get /api/product/:id get the product by id', (done) => {
@@ -58,8 +59,50 @@ describe('Product controller', () => {
         .post('/api/product/name')
         .send({ name: 'boTtle' })
         .end((err, res) => {
-            // console.log(JSON.stringify(res, undefined, 2));
+            // console.log(JSON.stringify(res.body, undefined, 2));
             expect(res.statusCode).is.equal(200);
+            expect(err).to.be.null;
+            done();
+        });
+    });
+
+    it('Post /api/product/search search products by criteria (fuzziness)', (done) => {
+        request(app)
+        .post('/api/product/search')
+        .send({
+            query: {
+                searchText: 'loster',
+                options: prdApiConfig.enumSearchOptions.isSearchFuzzy
+            }
+        })
+        .end((err, res) => {
+            // console.log(JSON.stringify(res.body, undefined, 2));
+            expect(res.statusCode).is.equal(200);
+            expect(res.body).to.be.an('array');
+            expect(res.body).to.be.not.empty;
+            expect(err).to.be.null;
+            done();
+        });
+    });
+
+    it('Post /api/product/search search products by criteria (price, active, inStock .. etc)', (done) => {
+        request(app)
+        .post('/api/product/search')
+        .send({
+            query: {
+                searchText: 'wine',
+                range: [0, 1000],
+                isActive: true,
+                isInStock: true,
+                isBestSeller: true,
+                options: prdApiConfig.enumSearchOptions.isSearchExactMatch
+            }
+        })
+        .end((err, res) => {
+            // console.log(JSON.stringify(res.body, undefined, 2));
+            expect(res.statusCode).is.equal(200);
+            expect(res.body).to.be.an('array');
+            expect(res.body).to.be.not.empty;
             expect(err).to.be.null;
             done();
         });
