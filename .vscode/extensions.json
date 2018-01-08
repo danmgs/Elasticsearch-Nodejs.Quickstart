@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "PeterJausovec.vscode-docker",
+    "dbaeumer.vscode-eslint",
+    "KnisterPeter.vscode-github",
+    "idleberg.hopscotch",
+    "xabikos.javascriptsnippets",
+    "dbaeumer.jshint",
+    "bierner.markdown-preview-github-styles",
+    "eg2.vscode-npm-script",
+    "zhuangtongfa.material-theme",
+    "Tyriar.terminal-tabs",
+    "msjsdiag.debugger-for-chrome",
+    "christian-kohler.npm-intellisense"
+  ]
+}
