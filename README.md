@@ -27,7 +27,11 @@ const esclient = new elasticsearch.Client({
 });
 ```
 
+4. For each directories **public** and **server**, install packages using this following command:
+```
+npm install
+```
 
-4. Links
+5. Links
 https://marcobonzanini.com/2015/02/09/phrase-match-and-proximity-search-in-elasticsearch/
 
