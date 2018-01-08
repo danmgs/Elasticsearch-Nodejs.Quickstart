@@ -13,10 +13,10 @@
           <label for="inputSearchText">Search for :</label>
           <input type="text" class="form-control" id="inputSearchText" name="searchText" [(ngModel)]="q.searchText" placeholder="What are you looking for ?">
         </div>
-        <div class="form-group slider md-margin">
-          <label class="form-check-label" for="rangesPrices">Filter: {{ q.rangePrices[0] }}€
-            < Price < {{ q.rangePrices[1] }}€</label>
-              <nouislider id="rangesPrices" name="rangePrices" [config]="sliderRangeconfig" [(ngModel)]="q.rangePrices"></nouislider>
+        <div class="form-check lg-margin">
+          <ion-range-slider #sliderElement type="double" [min]="sliderMinPrice" [max]="sliderMaxPrice" [from]="sliderFromPrice" from_shadow="true"
+            [to]="sliderToPrice" to_shadow="true" grid="true" grid_num="10" prefix="Price: " postfix=" €" decorate_both="false"
+            (onFinish)="myOnFinish($event)"></ion-range-slider>
         </div>
         <div class="form-check">
           <input type="checkbox" class="form-check-input" id="isInStock" name="isInStock" [(ngModel)]="q.isInStock">
@@ -25,35 +25,16 @@
         <div class="form-check">
           <input type="checkbox" class="form-check-input" id="isBestSeller" name="isBestSeller" [(ngModel)]="q.isBestSeller">
           <label class="form-check-label" for="isBestSeller">Show Best Seller Only</label>
-          <small id="isBestSellerHelp" class="form-text text-muted" *ngIf="productServiceConfigResponse">* products sold greater than <strong>{{ productServiceConfigResponse.soldBarrierStatusRangeConfig.max }}</strong> times ! </small>
+          <small id="isBestSellerHelp" class="form-text text-muted" *ngIf="productServiceConfigResponse">* products sold greater than
+            <strong>{{ productServiceConfigResponse?.soldBarrierStatusRangeConfig.max }}</strong> times ! </small>
         </div>
         <div class="form-check">
           <input type="checkbox" class="form-check-input" id="isActive" name="isActive" [(ngModel)]="q.isActive">
           <label class="form-check-label" for="isActive">Show active Only</label>
         </div>
-
-        <!--
-        <div class="form-check md-margin">
-          <input type="checkbox" class="form-check-input" id="isFuzzySearch" name="isFuzzySearch" [(ngModel)]="q.options.isFuzzySearch">
-          <label class="form-check-label options-cmd" for="isFuzzySearch">Performs fuzzy search</label>
-          <small id="isFuzzySearchHelp" class="form-text text-muted">* activates approximate string matching</small>
-        </div>
-        <div class="form-check md-margin">
-          <input type="checkbox" class="form-check-input" id="isExactMatchSearch" name="isExactMatchSearch" [(ngModel)]="q.options.isExactMatchSearch">
-          <label class="form-check-label options-cmd" for="isExactMatchSearch">Performs exact match search</label>
-          <small id="isExactMatchSearchHelp" class="form-text text-muted">* activates exact matching</small>
-        </div>
-        <div class="form-check md-margin">
-          <input type="checkbox" class="form-check-input" id="isProximitySearch" name="isProximitySearch" [(ngModel)]="q.options.isProximitySearch">
-          <label class="form-check-label options-cmd" for="isProximitySearch">Performs proximity search</label>
-          <small id="isProximitySearchHelp" class="form-text text-muted">* activates proximity search</small>
-        </div> 
-      -->
-
         <p class="advanced-search">
           <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            Show more filters&nbsp;
-            <i class="fa fa-search-plus" aria-hidden="true"></i>
+            <i [ngClass]="wasClicked ? 'fa fa-search-minus fa-lg':'fa fa-search-plus fa-lg'" aria-hidden="true" (click)="onAdvSearchClick()">&nbsp;Show more filters</i>
           </a>
         </p>
         <div class="collapse advanced-search" id="collapseExample">
@@ -70,7 +51,9 @@
               <label class="form-check-label">
                 <input type="radio" class="form-check-input" name="optionsRadiosSearch" id="isSearchFuzzy" [(ngModel)]="q.options" value="isSearchFuzzy"> Performs fuzzy search
               </label>
-              <small id="isSearchFuzzyHelp" class="form-text text-muted">* activates approximate string matching, with fuzzy tolerance = <strong>{{ productServiceConfigResponse.maxFuzzyConfig }}</strong></small>
+              <small id="isSearchFuzzyHelp" class="form-text text-muted">* activates approximate string matching, with fuzzy tolerance =
+                <strong>{{ productServiceConfigResponse?.maxFuzzyConfig }}</strong>
+              </small>
             </div>
             <div class="form-check">
               <label class="form-check-label">
@@ -82,7 +65,9 @@
               <label class="form-check-label">
                 <input type="radio" class="form-check-input" name="optionsRadiosSearch" id="isSearchProximity" [(ngModel)]="q.options" value="isSearchProximity"> Performs proximity search
               </label>
-              <small id="isSearchProximityHelp" class="form-text text-muted">* activates proximity search, with max edit-distance tolerance = <strong>{{ productServiceConfigResponse.maxEditDistanceConfig }}</strong></small>
+              <small id="isSearchProximityHelp" class="form-text text-muted">* activates proximity search, with max edit-distance tolerance =
+                <strong>{{ productServiceConfigResponse?.maxEditDistanceConfig }}</strong>
+              </small>
             </div>
           </fieldset>
         </div>
@@ -98,7 +83,7 @@
   <!-- <div class="row">
     <pre>{{ productResponse | json }}</pre>
   </div> -->
-  <div class="row" *ngIf="productResponse.length > 0">
+  <div class="row" *ngIf="productResponse.length > 0; else results_empty_content_tpl">
     <div class="col-sm">
       <table class="table table-sm table-inverse table-bordered results">
         <thead>
@@ -122,10 +107,10 @@
             <td>{{ elt.sold }}</td>
             <td>{{ elt.inStock }}</td>
             <td class="text-center">
-              <div *ngIf="elt.active; else inactive_content">
+              <div *ngIf="elt.active; else inactive_content_tpl">
                 <i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i>
               </div>
-              <ng-template #inactive_content>
+              <ng-template #inactive_content_tpl>
                 <i class="fa fa-square-o fa-2x" aria-hidden="true"></i>
               </ng-template>
             </td>
@@ -139,4 +124,9 @@
       </table>
     </div>
   </div>
+  <ng-template #results_empty_content_tpl>
+    <div class="text-center">
+      No results ...
+    </div>
+  </ng-template>
 </div>

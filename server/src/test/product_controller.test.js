@@ -21,10 +21,22 @@ describe('Product controller', () => {
         .end((err, res) => {
             expect(res.statusCode).is.equal(200);
             expect(err).to.be.null;
-            expect(res.text.soldBarrierStatusRange).to.be.not.null;
-            expect(res.body.soldBarrierStatusRange.min).to.be.a('Number');
-            expect(res.body.soldBarrierStatusRange.max).to.be.a('Number');
-            assert(res.body.soldBarrierStatusRange.max > 0);
+            expect(res.body.soldBarrierStatusRangeConfig).to.be.not.null;
+            expect(res.body.soldBarrierStatusRangeConfig.max).to.be.a('Number');
+            expect(res.body.soldBarrierStatusRangeConfig.min).to.be.a('Number');
+            assert(res.body.soldBarrierStatusRangeConfig.max > 0);
+            done();
+        });
+    });
+
+    it('Get /api/product/statsconfig get the dynamic configuration by using aggregation', (done) => {
+        const field = 'price';
+        request(app)
+        .get(`/api/product/statsconfig/${field}`)
+        .end((err, res) => {
+            expect(res.statusCode).is.equal(200);
+            expect(err).to.be.null;
+            expect(res.aggregation).to.be.not.null;
             done();
         });
     });

@@ -4,8 +4,10 @@ import { ProductService } from './services/product.service';
 import { Product } from './Shared/Product';
 import { ProductSearchQuery } from './Shared/ProductSearchQuery';
 import { ProductServiceConfig } from './Shared/ProductServiceConfig';
-
+import { ProductServiceStatsConfig } from './Shared/ProductServiceStatsConfig';
 import { EnumSearchOptions } from './Shared/EnumSearchOptions';
+import { reject } from 'q';
+
 
 @Component({
   selector: 'app-root',
@@ -15,39 +17,35 @@ import { EnumSearchOptions } from './Shared/EnumSearchOptions';
 export class AppComponent implements OnInit {
 
   productServiceConfigResponse: ProductServiceConfig;
+  priceStatsResponse: ProductServiceStatsConfig;
 
   q: ProductSearchQuery;
   productResponse: Product[] = [];
 
-  sliderRangeconfig: any;
+  sliderMinPrice: number;
+  sliderMaxPrice: number;
+  sliderFromPrice: number;
+  sliderToPrice: number;
 
   constructor(private productService: ProductService) { }
 
   ngOnInit() {
     this.q = new ProductSearchQuery(true, false, false);
-    this.q.searchText = 'lobster';
-    this.q.rangePrices = [0, 500];
-    // this.q.options.isFuzzySearch = false;
-    // this.q.options.isExactMatchSearch = false;
-    // this.q.options.isProximitySearch = false;
-
+    this.q.searchText = 'big loster';
     this.q.options = EnumSearchOptions.isSearchNone;
-    
-    this.sliderRangeconfig = {
-      behaviour: 'drag',
-      connect: true,
-      margin: 1,
-      range: {
-        min: 0,
-        max: 1000
-      },
-      pips: {
-        mode: 'steps',
-        density: 5
-      }
-    };
 
     this.getConfig();
+
+    this.sliderMinPrice = 0;
+    this.sliderMaxPrice = 1000;
+    this.sliderFromPrice = 0;
+    this.sliderToPrice = 1000;
+
+    this.initSliderPriceRange();
+  }
+
+  myOnFinish(e) {
+    this.q.rangePrices = [ e.from, e.to ];
   }
 
   getConfig() {
@@ -57,6 +55,15 @@ export class AppComponent implements OnInit {
         this.productServiceConfigResponse = response;
       }
       );
+  }
+
+  initSliderPriceRange() {
+    return this.productService.getStatsConfig('price')
+      .subscribe(
+      (response: ProductServiceStatsConfig) => {
+        this.priceStatsResponse = response;
+        this.updateSliderConfig(response.stats.aggregations.agg_stats_price.max);
+      });
   }
 
   search() {
@@ -69,5 +76,18 @@ export class AppComponent implements OnInit {
       },
       (error) => console.log(error)
       );
+  }
+
+  wasClicked = false;
+  onAdvSearchClick() {
+      this.wasClicked= !this.wasClicked;
+      console.log('click');
+  }
+
+  updateSliderConfig(allProductMaxPrice: number)
+  {
+    this.sliderMaxPrice = allProductMaxPrice < 100 ? allProductMaxPrice : 100;
+    this.sliderToPrice = this.sliderMaxPrice * 0.9;
+    this.sliderFromPrice = this.sliderMaxPrice * 0.1;
   }
 }
