@@ -21,13 +21,14 @@
       "styles": [
         "../node_modules/bootstrap/dist/css/bootstrap.min.css",
         "../node_modules/font-awesome/css/font-awesome.min.css",
-        "../node_modules/nouislider/distribute/nouislider.min.css",
+        "../node_modules/ion-rangeslider/css/ion.rangeSlider.css",
+        "../node_modules/ion-rangeslider/css/ion.rangeSlider.skinFlat.css",
         "styles.css"
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
-        "../node_modules/nouislider/distribute/nouislider.min.js"
+        "../node_modules/ion-rangeslider/js/ion.rangeSlider.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
