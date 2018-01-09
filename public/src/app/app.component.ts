@@ -73,6 +73,7 @@ export class AppComponent implements OnInit {
       .subscribe(
       (response: ProductServiceStatsConfig) => {
         this.priceStatsResponse = response;
+        // console.log('=>', response.stats.aggregations);
         this.updateSliderConfig(response.stats.aggregations.agg_stats_price.max);
       });
   }
@@ -99,7 +100,8 @@ export class AppComponent implements OnInit {
   }
 
   updateSliderConfig(allProductMaxPrice: number) {
-    this.sliderMaxPrice = allProductMaxPrice < 100 ? allProductMaxPrice : 100;
+    console.log('allProductMaxPrice', allProductMaxPrice);
+    this.sliderMaxPrice = allProductMaxPrice < 100 ? 100 : allProductMaxPrice;
     this.sliderToPrice = this.sliderMaxPrice * 0.9;
     this.sliderFromPrice = this.sliderMaxPrice * 0.1;
   }
