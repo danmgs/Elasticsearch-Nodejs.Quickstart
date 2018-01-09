@@ -1,6 +1,6 @@
 # Elasticsearch.Nodejs.QuickStart (2018)
 
-An application that exposed microservices under web api, by leveraging the greatness of Elasticsearch with nodejs.
+An application that exposes microservices under web api, by leveraging the greatness of Elasticsearch with nodejs.
 
 ![alt capture1](https://github.com/danmgs/Elasticsearch-Nodejs.Quickstart/blob/master/public/img/screenshot1.JPG)
 
