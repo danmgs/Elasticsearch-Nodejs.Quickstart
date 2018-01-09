@@ -2,7 +2,7 @@ const assert = require('assert');
 const esclient = require('../elastic_config');
 
 xdescribe('TESTING ELASTICSEARCH SETUP : shakespeare Index', () => {
-    xit('Ping cluster', (done) => {
+    it('Ping cluster', (done) => {
         esclient.ping({
             requestTimeout: 30000,
         }, (error) => {
@@ -16,7 +16,7 @@ xdescribe('TESTING ELASTICSEARCH SETUP : shakespeare Index', () => {
         });
     });
 
-    xit('Check cluster health', (done) => {
+    it('Check cluster health', (done) => {
         esclient.cat.health(
             {},
             (error, res) => {
@@ -31,7 +31,7 @@ xdescribe('TESTING ELASTICSEARCH SETUP : shakespeare Index', () => {
         );
     });
 
-    xit('List the indices to find shakespeare', () => {
+    it('List the indices to find shakespeare', () => {
         return esclient.cat.indices({})
             .then((res) => {
                 // console.log('test', res);
@@ -39,7 +39,7 @@ xdescribe('TESTING ELASTICSEARCH SETUP : shakespeare Index', () => {
             });
     });
 
-    xit('Get /shakespeare/default/_search', () => {
+    it('Get /shakespeare/default/_search', () => {
         return esclient.search({
             index: 'shakespeare',
             type: 'default',
@@ -61,7 +61,7 @@ xdescribe('TESTING ELASTICSEARCH SETUP : shakespeare Index', () => {
         });
     });
 
-    xit('Get a document with a given id', (done) => {
+    it('Get a document with a given id', (done) => {
         const id = 0;
         esclient.get({
             index: 'shakespeare',
@@ -76,7 +76,7 @@ xdescribe('TESTING ELASTICSEARCH SETUP : shakespeare Index', () => {
         });
     });
 
-    xit('Update a document with a given id', (done) => {
+    it('Update a document with a given id', (done) => {
         const id = 0;
         let oldversion = null;
 
@@ -111,7 +111,7 @@ xdescribe('TESTING ELASTICSEARCH SETUP : shakespeare Index', () => {
         });
     });
 
-    xit('Search for documents by a given playname', () => {
+    it('Search for documents by a given playname', () => {
         const strNameToSearch = 'henry';
         return esclient.search({
             index: 'shakespeare',

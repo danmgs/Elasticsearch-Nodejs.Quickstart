@@ -26,6 +26,9 @@ export class AppComponent implements OnInit {
   sliderMaxPrice: number;
   sliderFromPrice: number;
   sliderToPrice: number;
+  wasClicked = false;
+
+  serverHealthResponse: any;
 
   constructor(private productService: ProductService) { }
 
@@ -34,6 +37,7 @@ export class AppComponent implements OnInit {
     this.q.searchText = 'big loster';
     this.q.options = EnumSearchOptions.isSearchNone;
 
+    this.checkServerStatus();
     this.getConfig();
 
     this.sliderMinPrice = 0;
@@ -44,8 +48,15 @@ export class AppComponent implements OnInit {
     this.initSliderPriceRange();
   }
 
-  myOnFinish(e) {
-    this.q.rangePrices = [ e.from, e.to ];
+  checkServerStatus() {
+    this.productService.checkServerStatus()
+      .subscribe(
+      (response: Product[]) => {
+        console.log('serverHealthResponse =', response);
+        this.serverHealthResponse = response;
+      },
+      (error) => console.log(error)
+      );
   }
 
   getConfig() {
@@ -78,14 +89,16 @@ export class AppComponent implements OnInit {
       );
   }
 
-  wasClicked = false;
+  myOnFinish(e) {
+    this.q.rangePrices = [ e.from, e.to ];
+  }
+
   onAdvSearchClick() {
-      this.wasClicked= !this.wasClicked;
+      this.wasClicked = !this.wasClicked;
       console.log('click');
   }
 
-  updateSliderConfig(allProductMaxPrice: number)
-  {
+  updateSliderConfig(allProductMaxPrice: number) {
     this.sliderMaxPrice = allProductMaxPrice < 100 ? allProductMaxPrice : 100;
     this.sliderToPrice = this.sliderMaxPrice * 0.9;
     this.sliderFromPrice = this.sliderMaxPrice * 0.1;

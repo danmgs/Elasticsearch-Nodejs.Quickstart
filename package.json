@@ -1,0 +1,11 @@
+{
+  "name": "ecommerce-app",
+  "version": "1.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "cd public && ng serve",
+    "start:server": "cd server && npm start",
+    "test:server": "cd server && npm test",
+    "test:server:noverbose": "cd server && npm run test:noverbose"
+  }
+}

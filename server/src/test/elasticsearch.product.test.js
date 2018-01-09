@@ -5,7 +5,6 @@ describe('TESTING ELASTICSEARCH SETUP : product Index', () => {
     it('List the indices to find product', () => {
         return esclient.cat.indices({})
             .then((res) => {
-                // console.log('test', res);
                 expect(res.includes('product')).to.be.true;
             });
     });
@@ -23,7 +22,7 @@ describe('TESTING ELASTICSEARCH SETUP : product Index', () => {
             }
         }).then((res) => {
             const { total } = res.hits;
-            console.log('total', total);
+            // console.log('total', total);
             expect(total > 0).to.be.true;
         }, (error) => {
             console.trace(error);

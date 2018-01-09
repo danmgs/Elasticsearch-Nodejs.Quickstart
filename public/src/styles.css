@@ -5,58 +5,68 @@
     margin-top:15px;
 }
 
-small strong 
-{
+.serverStatus {
+    font-size: 0.8em;
+}
+
+.fa-check-circle {
+    color: green;
+}
+
+.fa-exclamation-triangle {
     color: red;
 }
 
-p.advanced-search
-{
+small strong {
+    color: red;
+}
+
+.advsearch-show-title {
+    font-size: 0.9em;
+}
+
+.advsearch-legend-title {
+    font-size: 0.9em;
+}
+
+p.advanced-search {
     margin-top:20px;
     margin-bottom:20px;
 }
 
-div.advanced-search
-{
+div.advanced-search {
     margin-top:20px;
     margin-bottom:20px;
 }
 
-div.lg-margin
-{
+div.lg-margin {
     margin-top:30px;
     margin-bottom:30px;
 }
 
-div.md-margin
-{
+div.md-margin {
     margin-top:20px;
     margin-bottom:20px;
 }
 
-div.sm-margin
-{
+div.sm-margin {
     margin-top:10px;
     margin-bottom:10px;
 }
 
-table.results td.highlight-key-content strong
-{
+table.results td.highlight-key-content strong {
     color: red;
 }
 
-form div.slider
-{
+form div.slider {
     margin-bottom:70px;
 }
 
-form label.options-cmd
-{
+form label.options-cmd {
     color: red;
 }
 
-.header-title-page
-{
+.header-title-page {
     margin-bottom:15px;
     text-transform: uppercase;
     cursor: default;
@@ -73,5 +83,3 @@ tr.table-header > th {
 .bg-info-custom {
     background-color: #60a5ff;
 }
-
-

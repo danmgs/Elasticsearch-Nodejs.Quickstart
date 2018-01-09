@@ -1,6 +1,6 @@
 # Elasticsearch.Nodejs.QuickStart (2018)
 
-A Simple Quickstart for Elasticsearch with nodejs, leveraging microservices exposed as web api.
+An application that exposed microservices under web api, by leveraging the greatness of Elasticsearch with nodejs.
 
 ![alt capture1](https://github.com/danmgs/Elasticsearch-Nodejs.Quickstart/blob/master/public/img/screenshot1.JPG)
 
@@ -32,6 +32,6 @@ const esclient = new elasticsearch.Client({
 npm install
 ```
 
-5. Links
+5. Useful links
 https://marcobonzanini.com/2015/02/09/phrase-match-and-proximity-search-in-elasticsearch/
 

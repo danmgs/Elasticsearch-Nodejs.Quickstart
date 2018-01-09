@@ -31,7 +31,7 @@ module.exports = {
         body = body.rawOption('size', '0');
         body = body.build();
 
-        console.log('body', JSON.stringify(body, undefined, 2));
+        // console.log('body', JSON.stringify(body, undefined, 2));
 
         esclient.search({
             index,
@@ -75,18 +75,16 @@ module.exports = {
         console.log(JSON.stringify(query, undefined, 2));
         let body = bodybuilder();
 
-        console.log('search options = ', query.options);
+        // console.log('search options = ', query.options);
 
         let searchTextObj;
         if (query.searchText) {
             if (query.options === prdApiConfig.enumSearchOptions.isSearchExactMatch) {
-                console.log(1);
                 searchTextObj = query.searchText;
                 body = body.query('match_phrase', 'name', searchTextObj);
                 body = body.orQuery('match_phrase', 'description', searchTextObj);
                 body = body.orQuery('match_phrase', 'tags', searchTextObj);
             } else if (query.options === prdApiConfig.enumSearchOptions.isSearchProximity) {
-                console.log(2);
                 searchTextObj = {
                     query: query.searchText,
                     slop: prdApiConfig.maxEditDistanceConfig
@@ -96,13 +94,11 @@ module.exports = {
                 body = body.orQuery('match_phrase', 'tags', searchTextObj);
             } else {
                 if (query.options === prdApiConfig.enumSearchOptions.isSearchFuzzy) {
-                    console.log(3);
                     searchTextObj = {
                         query: query.searchText,
                         fuzziness: prdApiConfig.maxFuzzyConfig
                     };
                 } else {
-                    console.log(4, query.options, prdApiConfig.enumSearchOptions.isSearchFuzzy);
                     searchTextObj = query.searchText;
                 }
 
@@ -142,7 +138,7 @@ module.exports = {
 
         body = body.build();
 
-        console.log('body', JSON.stringify(body, undefined, 2));
+        // console.log('body', JSON.stringify(body, undefined, 2));
 
         esclient.search({
             index,
