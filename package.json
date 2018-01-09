@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "cd public && ng serve",
-    "start:server": "cd server && npm start",
+    "start": "run-p start:server start:client",
+    "start:client": "cd public && ng serve",
+    "start:server:all": "run-s start:server:es start:server",
+    "start:server": "cd server && npm start",    
+    "start:server:es": "C:\\Apps\\ELK\\elasticsearch-6.1.1\\bin\\elasticsearch.bat",
     "test:server": "cd server && npm test",
     "test:server:noverbose": "cd server && npm run test:noverbose"
+  },
+  "dependencies": {
+    "npm-run-all": "^4.1.2"
   }
 }
