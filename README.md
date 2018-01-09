@@ -43,15 +43,21 @@ npm install
 npm run start:server:es
 ```
 
-5.2. "Then, to start client and server:
+5.2. Then, to start client and server:
 ```
 npm start
 ```
 
+5.3. Launch web client on a browser using url:\
+http://localhost:4200/
+
 Green ligh means server is up.
+
 ![alt capture3](https://github.com/danmgs/Elasticsearch-Nodejs.Quickstart/blob/master/public/img/screenshot3.PNG)
 
-Red ligh means server is down because of elasticsearch cluster down and need to be started. Check step **5.1**.
+Red ligh means server is down.\
+Reason is elasticsearch cluster down and need to be started. Check step **5.1**.
+
 ![alt capture4](https://github.com/danmgs/Elasticsearch-Nodejs.Quickstart/blob/master/public/img/screenshot4.PNG)
 
 6. To launch unit tests (server must be shutdown), make sure elasticsearch cluster is started.
